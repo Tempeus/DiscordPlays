@@ -34,9 +34,11 @@ intents.members = False  # Disable typing events, if needed
 intents.presences = False  # Disable presence events, if needed
 intents.message_content = True    # Enable message content updates (required for commands)
 
+# environment variables
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-print(TOKEN)
+TRITIN_ID = os.getenv('TRITIN_ID')
+KEV_ID = os.getenv('KEV_ID')
 
 # Functions
 def generate_TTS_mp3(msg):
@@ -90,6 +92,7 @@ async def join(ctx):
         channel = ctx.message.author.voice.channel
     await channel.connect()
 
+#################### Valorant Controls ###############################
 @bot.command(name='shoot', help="Shoots gun")
 async def shoot_gun(ctx):
     await ctx.send("Shooting Gun", tts=True)
@@ -99,7 +102,6 @@ async def shoot_gun(ctx):
         pydirectinput.mouseUp(button="left")
     thread_pool.submit(thread)
 
-
 @bot.command(name='vc', help="Uses voice chat for 10 seconds")
 async def VC(ctx):
     await ctx.send("Using voice chat for the next 10 seconds", tts=True)
@@ -107,7 +109,6 @@ async def VC(ctx):
         HoldAndReleaseKey(V, 10)
     
     thread_pool.submit(thread)
-
 
 @bot.command(name='crouch', help="Holds Crouch for 5 seconds")
 async def crouch(ctx):
@@ -123,14 +124,12 @@ async def crouch(ctx):
         HoldAndReleaseKey(SPACE, 5)
     thread_pool.submit(thread)
 
-
 @bot.command(name='drop', help="Make me drop my gun")
 async def drop(ctx):
     await ctx.send("Dropping gun", tts=True)
     def thread():
         HoldAndReleaseKey(G, 0.7)
     thread_pool.submit(thread)
-
 
 @bot.command(name='ult', help="Make me use my ult")
 async def ult(ctx):
@@ -142,7 +141,6 @@ async def ult(ctx):
         pydirectinput.mouseUp(button="left")
     
     thread_pool.submit(thread)
-
 
 @bot.command(name='pistol', help="Switch to my pistol")
 async def pistol(ctx):
@@ -223,7 +221,6 @@ async def ability_three(ctx):
     thread_pool.submit(thread)
 
 ########################################### DEBUFFS #########################################################
-
 @bot.command(name="america", help="Hold down shoot button for 10 seconds")
 async def america(ctx):
     await ctx.send("What the fuck is a kilometer", tts=True)
@@ -243,12 +240,48 @@ async def slippery_hands(ctx):
 
 @bot.command(name="reload_paranoia", help="make me reload a gun every 5 seconds 20 times")
 async def reload_paranoia(ctx):
-    await ctx.send("Initiating reloading paranoia")
+    await ctx.send("Initiating reloading paranoia", tts=True)
     thread_pool.submit(reload_paranoia,5)
 
 @bot.command(name='inspire', help="it will inspire you")
 async def inspire(ctx):
     flow = inspirobot.flow()  # Generate a flow object
     await ctx.send(flow[0].text, tts=True)    
+
+############################################# SOUNDPAD ###########################################
+
+
+########################################## Tritin  ##########################################
+@bot.command(name="compliment_me", help="let me cheer you up")
+async def compliment_me(ctx):
+    if ctx.author.id != TRITIN_ID:
+        await ctx.send(f"{ctx.author.mention}! You look smoking hot today ;)")
+    else:
+        await ctx.send("Exception error occured")
+
+@bot.command(name="bully_tritin", help="self explanatory actually")
+async def bully_tritin(ctx):
+    if ctx.author.id != TRITIN_ID:
+        await ctx.send("Fuck you Tritin", tts=True)  
+    else:
+        await ctx.send("Why are you using this command, Tritin", tts=True)
+
+@bot.command(name="dice", help="rolls a regular dice")
+async def dice(ctx):
+    random_number = random.randint(1, 6)
+    if ctx.author.id == TRITIN_ID:
+        await ctx.send(f"{ctx.author.mention} rolled: -1 ... wait wtf how is that possible?")
+    else:
+        await ctx.send(f"{ctx.author.mention} rolled: {random_number}")
+
+@bot.command(name="d20", help="rolls a d20 dice")
+async def d20_dice(ctx):
+    random_number = random.randint(1, 20)
+    if random_number == 1 or ctx.author.id == TRITIN_ID:
+        await ctx.send(f"{ctx.author.mention} rolled: 1 ... Critical Failure")
+    elif random_number == 20 or ctx.author.id == KEV_ID:
+        await ctx.send(f"{ctx.author.mention} rolled: 20! Critical Success!")
+    else:
+        await ctx.send(f"{ctx.author.mention} rolled: {random_number}")
 
 bot.run(TOKEN)
