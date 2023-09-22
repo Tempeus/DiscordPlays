@@ -7,6 +7,7 @@ import playsound
 import os
 import inspirobot
 import random
+from dadjokes import Dadjoke
 
 import keyboard
 import time
@@ -79,6 +80,7 @@ def reload_paranoia(timer_duration):
 # Initialize the bot with the intents
 bot = commands.Bot(command_prefix='$', intents=intents)
 
+
 @bot.command(name='join', help='Tells the bot to join the voice channel')
 async def join(ctx):
     if not ctx.message.author.voice:
@@ -96,6 +98,13 @@ async def shoot_gun(ctx):
         pydirectinput.mouseDown(button="left")
         time.sleep(1)
         pydirectinput.mouseUp(button="left")
+    thread_pool.submit(thread)
+
+@bot.command(name="entry", help="Holds W for 10 seconds")
+async def hold_w(ctx):
+    await ctx.send("Holding W", tts=True)
+    def thread():
+        HoldAndReleaseKey(W, 10)
     thread_pool.submit(thread)
 
 @bot.command(name='vc', help="Uses voice chat for 10 seconds")
@@ -245,19 +254,19 @@ async def inspire(ctx):
     flow = inspirobot.flow()  # Generate a flow object
     await ctx.send(flow[0].text, tts=True)
 
-@bot.command(name="bot_ai")
+@bot.command(name="bot_ai", help="Jen Jen will say an inspirational quote")
 async def ai(ctx):
     await clear(ctx, 1)
     flow = inspirobot.flow()  # Generate a flow object
     await TTS(ctx, flow[0].text)
     await ctx.send(flow[0].text)
 
-@bot.command(name="say")
+@bot.command(name="s", help="This is Jen Jen's real voice")
 async def ai_say(ctx, *, msg):
     await clear(ctx, 0)
     await TTS(ctx, msg)
 
-@bot.command(name="jvc")
+@bot.command(name="jvc", help="dont use this")
 async def jvc(ctx, channel_name: str):
     await clear(ctx, 0)
     voice_channel = discord.utils.get(ctx.guild.voice_channels, name=channel_name)
@@ -266,7 +275,7 @@ async def jvc(ctx, channel_name: str):
         # Connect the bot to the voice channel
         voice_client = await voice_channel.connect()
 
-@bot.command(name="lvc")
+@bot.command(name="lvc", help="dont use this")
 async def leave_voice(ctx):
     # Disconnect the bot from the voice channel
     await clear(ctx, 0)
@@ -283,12 +292,21 @@ async def compliment_me(ctx):
     else:
         await ctx.send("Exception error occured")
 
+@bot.command(name="degrade_me", help="Degrade me, talk me down")
+async def degrade_me(ctx):
+    await ctx.send("Eat my ass", tts=True)
+
 @bot.command(name="bully_tritin", help="self explanatory actually")
 async def bully_tritin(ctx):
     if ctx.author.id != TRITIN_ID:
         await ctx.send("Fuck you Tritin", tts=True)  
     else:
         await ctx.send("Why are you using this command, Tritin", tts=True)
+
+@bot.command(name="joke", help="Says a dad joke cuz this bot is a daddy <3")
+async def joke(ctx):
+    dadjoke = Dadjoke()
+    await ctx.send(dadjoke.joke, tts=True)
 
 @bot.command(name="dice", help="rolls a regular dice")
 async def dice(ctx):
@@ -308,17 +326,11 @@ async def d20_dice(ctx):
     else:
         await ctx.send(f"{ctx.author.mention} rolled: {random_number}")
 
-
-
-
 ######################################### DICTATOR ###############################################
 @bot.command(name="clear")
 async def clear(ctx, amount=5):
     # Check if the user has permission to manage messages
-    if ctx.author.id == KEV_ID:
-        # Delete the last `amount` messages in the channel
-        await ctx.channel.purge(limit=amount + 1)  # +1 to include the command message
-    else:
-        await ctx.channel.purge(1)  # +1 to include the command message
+    # Delete the last `amount` messages in the channel
+    await ctx.channel.purge(limit=amount + 1)  # +1 to include the command message
 
 bot.run(TOKEN)
