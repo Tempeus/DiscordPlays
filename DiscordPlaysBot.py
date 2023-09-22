@@ -1,4 +1,3 @@
-# bot.py
 import os
 from discord.ext import commands
 import discord
@@ -8,7 +7,6 @@ import playsound
 import os
 import inspirobot
 import random
-
 
 import keyboard
 import time
@@ -37,8 +35,8 @@ intents.message_content = True    # Enable message content updates (required for
 # environment variables
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-TRITIN_ID = os.getenv('TRITIN_ID')
-KEV_ID = os.getenv('KEV_ID')
+TRITIN_ID = int(os.getenv('TRITIN_ID'))
+KEV_ID = int(os.getenv('KEV_ID'))
 
 # Functions
 def generate_TTS_mp3(msg):
@@ -47,10 +45,7 @@ def generate_TTS_mp3(msg):
     tts.save(name)
     return name
 
-
 #We dont need this shit anymore
-'''
-
 async def TTS(ctx, msg):
     name = generate_TTS_mp3(msg)
     time.sleep(1)
@@ -58,14 +53,15 @@ async def TTS(ctx, msg):
     if ctx.voice_client:
         source = discord.FFmpegPCMAudio(name)
         ctx.voice_client.play(source)
-        await ctx.send(msg)
     else:
-        await ctx.send('I am not in a voice channel. Use $join to make me join.')
+        await join(ctx)
+        time.sleep(1)
+        source = discord.FFmpegPCMAudio(name)
+        ctx.voice_client.play(source)
     
-    #can increase duration using Multi-threading?
+    #attempt garbage collection
     time.sleep(5)
     os.remove(name)
-'''
 
 def drop_weapon_every_interval(timer_duration):
     for i in range(10):
@@ -243,11 +239,39 @@ async def reload_paranoia(ctx):
     await ctx.send("Initiating reloading paranoia", tts=True)
     thread_pool.submit(reload_paranoia,5)
 
+############################### Sentient AI ###################################################
 @bot.command(name='inspire', help="it will inspire you")
 async def inspire(ctx):
     flow = inspirobot.flow()  # Generate a flow object
-    await ctx.send(flow[0].text, tts=True)    
+    await ctx.send(flow[0].text, tts=True)
 
+@bot.command(name="bot_ai")
+async def ai(ctx):
+    await clear(ctx, 1)
+    flow = inspirobot.flow()  # Generate a flow object
+    await TTS(ctx, flow[0].text)
+    await ctx.send(flow[0].text)
+
+@bot.command(name="say")
+async def ai_say(ctx, *, msg):
+    await clear(ctx, 0)
+    await TTS(ctx, msg)
+
+@bot.command(name="jvc")
+async def jvc(ctx, channel_name: str):
+    await clear(ctx, 0)
+    voice_channel = discord.utils.get(ctx.guild.voice_channels, name=channel_name)
+
+    if voice_channel:
+        # Connect the bot to the voice channel
+        voice_client = await voice_channel.connect()
+
+@bot.command(name="lvc")
+async def leave_voice(ctx):
+    # Disconnect the bot from the voice channel
+    await clear(ctx, 0)
+    if ctx.voice_client:
+        await ctx.voice_client.disconnect()
 ############################################# SOUNDPAD ###########################################
 
 
@@ -283,5 +307,18 @@ async def d20_dice(ctx):
         await ctx.send(f"{ctx.author.mention} rolled: 20! Critical Success!")
     else:
         await ctx.send(f"{ctx.author.mention} rolled: {random_number}")
+
+
+
+
+######################################### DICTATOR ###############################################
+@bot.command(name="clear")
+async def clear(ctx, amount=5):
+    # Check if the user has permission to manage messages
+    if ctx.author.id == KEV_ID:
+        # Delete the last `amount` messages in the channel
+        await ctx.channel.purge(limit=amount + 1)  # +1 to include the command message
+    else:
+        await ctx.channel.purge(1)  # +1 to include the command message
 
 bot.run(TOKEN)
