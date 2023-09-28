@@ -40,7 +40,6 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 TRITIN_ID = int(os.getenv('TRITIN_ID'))
 KEV_ID = int(os.getenv('KEV_ID'))
 
-global DISCORD_CONTROL
 DISCORD_CONTROL = False
 
 # Functions
@@ -87,6 +86,7 @@ bot = commands.Bot(command_prefix='$', intents=intents)
 @bot.command(name="toggle_discord_control")
 async def toggle_discord_control(ctx):
     if ctx.author.id == KEV_ID:
+        global DISCORD_CONTROL
         DISCORD_CONTROL = not DISCORD_CONTROL
         await ctx.send(f"Discord Control is set to: {DISCORD_CONTROL}")
 
