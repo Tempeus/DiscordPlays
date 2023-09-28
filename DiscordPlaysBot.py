@@ -16,6 +16,7 @@ import pyautogui
 import concurrent.futures
 
 from DiscordPlays_KeyCodes import *
+import Data
 
 # Message Queue Variables #
 MAX_QUEUE_LENGTH = 20
@@ -38,6 +39,8 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TRITIN_ID = int(os.getenv('TRITIN_ID'))
 KEV_ID = int(os.getenv('KEV_ID'))
+
+TROLL_VALORANT = False
 
 # Functions
 def generate_TTS_mp3(msg):
@@ -80,6 +83,35 @@ def reload_paranoia(timer_duration):
 # Initialize the bot with the intents
 bot = commands.Bot(command_prefix='$', intents=intents)
 
+@bot.command(name="toggle_discord_control")
+async def toggle_discord_control(ctx):
+    if ctx.author.id == KEV_ID:
+        DISCORD_CONTROL = not DISCORD_CONTROL
+        await ctx.send(f"Discord Control is set to: {DISCORD_CONTROL}")
+
+
+@bot.command(name='h', help="USE ME FOR BETTER HELP")
+async def manual_help(ctx, command_name: str = None):
+    if not command_name:
+        # Provide a general help message if no specific command is specified
+        await ctx.send("You can use this command to get detailed information about other commands. "
+                       "Usage: `$h <command_name>`")
+        await ctx.send(Data.help_message)
+        return
+
+    # Find the command based on the provided command_name
+    command = bot.get_command(command_name)
+
+    if not command:
+        await ctx.send("Command not found.")
+        return
+
+    # Construct and send a detailed help message for the specified command
+    help_message = f"**Command Name:** {command.name}\n"
+    help_message += f"**Description:** {command.help}\n"
+    help_message += f"**Usage:** {ctx.prefix}{command.name} {command.signature}\n"
+
+    await ctx.send(help_message)
 
 @bot.command(name='join', help='Tells the bot to join the voice channel')
 async def join(ctx):
@@ -93,160 +125,212 @@ async def join(ctx):
 #################### Valorant Controls ###############################
 @bot.command(name='shoot', help="Shoots gun")
 async def shoot_gun(ctx):
-    await ctx.send("Shooting Gun", tts=True)
-    def thread():
-        pydirectinput.mouseDown(button="left")
-        time.sleep(1)
-        pydirectinput.mouseUp(button="left")
-    thread_pool.submit(thread)
+    if TROLL_VALORANT:
+        await ctx.send("Shooting Gun", tts=True)
+        def thread():
+            pydirectinput.mouseDown(button="left")
+            time.sleep(1)
+            pydirectinput.mouseUp(button="left")
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
+
 
 @bot.command(name="entry", help="Holds W for 10 seconds")
 async def hold_w(ctx):
-    await ctx.send("Holding W", tts=True)
-    def thread():
-        HoldAndReleaseKey(W, 10)
-    thread_pool.submit(thread)
+    if TROLL_VALORANT:
+        await ctx.send("Holding W", tts=True)
+        def thread():
+            HoldAndReleaseKey(W, 10)
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name='vc', help="Uses voice chat for 10 seconds")
 async def VC(ctx):
-    await ctx.send("Using voice chat for the next 10 seconds", tts=True)
-    def thread():
-        HoldAndReleaseKey(V, 10)
-    
-    thread_pool.submit(thread)
+    if TROLL_VALORANT:
+        await ctx.send("Using voice chat for the next 10 seconds", tts=True)
+        def thread():
+            HoldAndReleaseKey(V, 10)
+        
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name='crouch', help="Holds Crouch for 5 seconds")
 async def crouch(ctx):
-    await ctx.send("Crouching for the next 5 seconds", tts=True)
-    def thread():
-        HoldAndReleaseKey(LEFT_CONTROL, 5)
-    thread_pool.submit(thread)
+    if TROLL_VALORANT:
+        await ctx.send("Crouching for the next 5 seconds", tts=True)
+        def thread():
+            HoldAndReleaseKey(LEFT_CONTROL, 5)
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name='jump', help="Make me Jump")
 async def crouch(ctx):
-    await ctx.send("Jump", tts=True)
-    def thread():
-        HoldAndReleaseKey(SPACE, 5)
-    thread_pool.submit(thread)
+    if TROLL_VALORANT:
+        await ctx.send("Jump", tts=True)
+        def thread():
+            HoldAndReleaseKey(SPACE, 5)
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name='drop', help="Make me drop my gun")
 async def drop(ctx):
-    await ctx.send("Dropping gun", tts=True)
-    def thread():
-        HoldAndReleaseKey(G, 0.7)
-    thread_pool.submit(thread)
+    if TROLL_VALORANT:
+        await ctx.send("Dropping gun", tts=True)
+        def thread():
+            HoldAndReleaseKey(G, 0.7)
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name='ult', help="Make me use my ult")
 async def ult(ctx):
-    await ctx.send("Using Ultimate", tts=True)
-    def thread():
-        HoldAndReleaseKey(X, 0.7)
-        pydirectinput.mouseDown(button="left")
-        time.sleep(1)
-        pydirectinput.mouseUp(button="left")
-    
-    thread_pool.submit(thread)
+    if TROLL_VALORANT:
+        await ctx.send("Using Ultimate", tts=True)
+        def thread():
+            HoldAndReleaseKey(X, 0.7)
+            pydirectinput.mouseDown(button="left")
+            time.sleep(1)
+            pydirectinput.mouseUp(button="left")
+        
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name='pistol', help="Switch to my pistol")
 async def pistol(ctx):
-    await ctx.send("Switching to pistol", tts=True)
-    def thread():
-        HoldAndReleaseKey(TWO, 0.7)
+    if TROLL_VALORANT:
+        await ctx.send("Switching to pistol", tts=True)
+        def thread():
+            HoldAndReleaseKey(TWO, 0.7)
 
-    thread_pool.submit(thread)
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name='knife', help="Switch to my knife")
-async def pistol(ctx):
-    await ctx.send("Switching to knife", tts=True)
-    def thread():
-        HoldAndReleaseKey(THREE, 0.7)
+async def knife(ctx):
+    if TROLL_VALORANT:
+        await ctx.send("Switching to knife", tts=True)
+        def thread():
+            HoldAndReleaseKey(THREE, 0.7)
 
-    thread_pool.submit(thread)
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name='reload', help="Make me reload")
-async def pistol(ctx):
-    await ctx.send("Reloading", tts=True)
-    def thread():
-        HoldAndReleaseKey(R, 0.7)
-    
-    thread_pool.submit(thread)
+async def reload(ctx):
+    if TROLL_VALORANT:
+        await ctx.send("Reloading", tts=True)
+        def thread():
+            HoldAndReleaseKey(R, 0.7)
+        
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name="random_ability", help="Use a random ability")
 async def random_ability(ctx):
-    await ctx.send("Using random ability", tts=True)
-    
-    def thread():
-        ability_bind = [C, LEFT_ALT, E]
-        random_ability = random.choice(ability_bind)
-        HoldAndReleaseKey(random_ability, 0.7)
-        time.sleep(0.3)
-        pydirectinput.mouseDown(button="left")
-        time.sleep(0.25)
-        pydirectinput.mouseUp(button="left")
+    if TROLL_VALORANT:
+        await ctx.send("Using random ability", tts=True)
+        
+        def thread():
+            ability_bind = [C, LEFT_ALT, E]
+            random_ability = random.choice(ability_bind)
+            HoldAndReleaseKey(random_ability, 0.7)
+            time.sleep(0.3)
+            pydirectinput.mouseDown(button="left")
+            time.sleep(0.25)
+            pydirectinput.mouseUp(button="left")
 
-    thread_pool.submit(thread)
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name="ability1", help="using ability 1")
 async def ability_one(ctx):
-    await ctx.send("Using ability", tts=True)
+    if TROLL_VALORANT:
+        await ctx.send("Using ability", tts=True)
 
-    def thread():
-        HoldAndReleaseKey(C, 0.7)
-        time.sleep(0.3)
-        pydirectinput.mouseDown(button="left")
-        time.sleep(0.25)
-        pydirectinput.mouseUp(button="left")
-    
-    thread_pool.submit(thread)
+        def thread():
+            HoldAndReleaseKey(C, 0.7)
+            time.sleep(0.3)
+            pydirectinput.mouseDown(button="left")
+            time.sleep(0.25)
+            pydirectinput.mouseUp(button="left")
+        
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name="ability2", help="using ability 2")
 async def ability_two(ctx):
-    await ctx.send("Using ability", tts=True)
-    
-    def thread():
-        HoldAndReleaseKey(LEFT_ALT, 0.7)
-        time.sleep(0.3)
-        pydirectinput.mouseDown(button="left")
-        time.sleep(0.25)
-        pydirectinput.mouseUp(button="left")
-    
-    thread_pool.submit(thread)
+    if TROLL_VALORANT:
+        await ctx.send("Using ability", tts=True)
+        
+        def thread():
+            HoldAndReleaseKey(LEFT_ALT, 0.7)
+            time.sleep(0.3)
+            pydirectinput.mouseDown(button="left")
+            time.sleep(0.25)
+            pydirectinput.mouseUp(button="left")
+        
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name="ability3", help="using ability 3")
 async def ability_three(ctx):
-    await ctx.send("Using ability", tts=True)
+    if TROLL_VALORANT:
+        await ctx.send("Using ability", tts=True)
 
-    def thread():
-        HoldAndReleaseKey(E, 0.7)
-        time.sleep(0.3)
-        pydirectinput.mouseDown(button="left")
-        time.sleep(0.25)
-        pydirectinput.mouseUp(button="left")
-    
-    thread_pool.submit(thread)
+        def thread():
+            HoldAndReleaseKey(E, 0.7)
+            time.sleep(0.3)
+            pydirectinput.mouseDown(button="left")
+            time.sleep(0.25)
+            pydirectinput.mouseUp(button="left")
+        
+        thread_pool.submit(thread)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 ########################################### DEBUFFS #########################################################
 @bot.command(name="america", help="Hold down shoot button for 10 seconds")
 async def america(ctx):
-    await ctx.send("What the fuck is a kilometer", tts=True)
-    def tamerica():
-        for i in range(20):
-            time.sleep(0.5)
-            pydirectinput.mouseDown(button="left")
-            time.sleep(0.5)
-            pydirectinput.mouseUp(button="left")
+    if TROLL_VALORANT:
+        await ctx.send("What the fuck is a kilometer", tts=True)
+        def tamerica():
+            for i in range(20):
+                time.sleep(0.5)
+                pydirectinput.mouseDown(button="left")
+                time.sleep(0.5)
+                pydirectinput.mouseUp(button="left")
 
-    thread_pool.submit(tamerica)
+        thread_pool.submit(tamerica)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name="slippery_hands", help="Drop my weapon every 10 seconds 10 times")
 async def slippery_hands(ctx):
-    await ctx.send("Initiating Slippery Hands Sequence", tts=True)
-    thread_pool.submit(drop_weapon_every_interval,10)
+    if TROLL_VALORANT:
+        await ctx.send("Initiating Slippery Hands Sequence", tts=True)
+        thread_pool.submit(drop_weapon_every_interval,10)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 @bot.command(name="reload_paranoia", help="make me reload a gun every 5 seconds 20 times")
 async def reload_paranoia(ctx):
-    await ctx.send("Initiating reloading paranoia", tts=True)
-    thread_pool.submit(reload_paranoia,5)
+    if TROLL_VALORANT:
+        await ctx.send("Initiating reloading paranoia", tts=True)
+        thread_pool.submit(reload_paranoia,5)
+    else:
+        await ctx.send("Discord control is not turned on")
 
 ############################### Sentient AI ###################################################
 @bot.command(name='inspire', help="it will inspire you")
@@ -281,7 +365,29 @@ async def leave_voice(ctx):
     await clear(ctx, 0)
     if ctx.voice_client:
         await ctx.voice_client.disconnect()
+
 ############################################# SOUNDPAD ###########################################
+@bot.command(name="bot_snore", help="soundpad")
+async def snore(ctx):
+    if ctx.voice_client:
+        source = discord.FFmpegPCMAudio("Sounds/snore.mp3")
+        ctx.voice_client.play(source)
+    else:
+        await join(ctx)
+        time.sleep(1)
+        source = discord.FFmpegPCMAudio("Sounds/snore.mp3")
+        ctx.voice_client.play(source)
+
+@bot.command(name="bot_meow", help="soundpad")
+async def meow(ctx):
+    if ctx.voice_client:
+        source = discord.FFmpegPCMAudio("Sounds/meow.mp3")
+        ctx.voice_client.play(source)
+    else:
+        await join(ctx)
+        time.sleep(1)
+        source = discord.FFmpegPCMAudio("Sounds/meow.mp3")
+        ctx.voice_client.play(source)
 
 
 ########################################## Tritin  ##########################################
