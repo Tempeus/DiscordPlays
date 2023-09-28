@@ -39,6 +39,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TRITIN_ID = int(os.getenv('TRITIN_ID'))
 KEV_ID = int(os.getenv('KEV_ID'))
+JENJEN_ID = int(os.getenv('JENJEN_ID'))
 
 DISCORD_CONTROL = False
 
@@ -52,7 +53,7 @@ def generate_TTS_mp3(msg):
 #We dont need this shit anymore
 async def TTS(ctx, msg):
     name = generate_TTS_mp3(msg)
-    time.sleep(1)
+    time.sleep(0.5)
 
     if ctx.voice_client:
         source = discord.FFmpegPCMAudio(name)
@@ -440,4 +441,13 @@ async def clear(ctx, amount=5):
     # Delete the last `amount` messages in the channel
     await ctx.channel.purge(limit=amount + 1)  # +1 to include the command message
 
+
+####################################### VOICE FOR SILENCED ######################################
+@bot.event
+async def on_message(message):
+    if message.channel.name == 'silenced-people' and not message.author.bot and message.author.id == JENJEN_ID:
+        ctx = await bot.get_context(message)
+        await TTS(ctx, message.content)
+    # Process the message as a bot command
+    await bot.process_commands(message)
 bot.run(TOKEN)
