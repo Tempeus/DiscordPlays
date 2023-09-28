@@ -2,14 +2,14 @@ import os
 from discord.ext import commands
 import discord
 from dotenv import load_dotenv
+
+
 from gtts import gTTS
-import playsound
-import os
 import inspirobot
 import random
 from dadjokes import Dadjoke
+from uwuipy import uwuipy
 
-import keyboard
 import time
 import pydirectinput
 import pyautogui
@@ -40,6 +40,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 TRITIN_ID = int(os.getenv('TRITIN_ID'))
 KEV_ID = int(os.getenv('KEV_ID'))
 JENJEN_ID = int(os.getenv('JENJEN_ID'))
+CINDY_ID = int(os.getenv('CINDY_ID'))
 
 DISCORD_CONTROL = False
 
@@ -433,6 +434,11 @@ async def d20_dice(ctx):
         await ctx.send(f"{ctx.author.mention} rolled: 20! Critical Success!")
     else:
         await ctx.send(f"{ctx.author.mention} rolled: {random_number}")
+
+@bot.command(name="uwu")
+async def uwu(ctx,*,msg):
+    uwu = uwuipy()
+    await ctx.send(uwu.uwuify(msg))
 
 ######################################### DICTATOR ###############################################
 @bot.command(name="clear")
