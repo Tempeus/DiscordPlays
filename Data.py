@@ -85,17 +85,17 @@ SOUNDPAD_CMD = {
 
 help_message = f"**Valorant Commands:**\n"
 for command, description in VALORANT_CMD.items():
-    help_message += f"{command}: {description}"
+    help_message += f"{command}: {description}\n"
 help_message += f"=======================\n"
 help_message += f"**Debuffs:**\n"
 for command, description in DEBUFF_CMD.items():
-    help_message += f"{command}: {description}"
+    help_message += f"{command}: {description}\n"
 help_message += f"=======================\n"
 help_message += f"**Sentient AI:**\n"
 for command, description in AI_CMD.items():
-    help_message += f"{command}: {description}"
+    help_message += f"{command}: {description}\n"
 help_message += f"=======================\n"
 help_message += f"**Soundpad:**\n"
 for command, description in SOUNDPAD_CMD.items():
-    help_message += f"{command}: {description}"
+    help_message += f"{command}: {description}\n"
 help_message += f"=======================\n"

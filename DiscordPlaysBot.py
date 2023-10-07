@@ -47,7 +47,7 @@ DISCORD_CONTROL = False
 # Functions
 def generate_TTS_mp3(msg):
     name = f"temp{time.time()}.mp3"
-    tts = gTTS(msg)
+    tts = gTTS(msg, tld='co.uk')
     tts.save(name)
     return name
 
@@ -397,13 +397,17 @@ async def meow(ctx):
 @bot.command(name="compliment_me", help="let me cheer you up")
 async def compliment_me(ctx):
     if ctx.author.id != TRITIN_ID:
-        await ctx.send(f"{ctx.author.mention}! You look smoking hot today ;)")
+        await ctx.send(f"{ctx.author.mention}!, "+ Data.FLIRTS_LIST[random.randint(0,len(Data.FLIRTS_LIST))])
     else:
         await ctx.send("Exception error occured")
 
 @bot.command(name="degrade_me", help="Degrade me, talk me down")
 async def degrade_me(ctx):
-    await ctx.send("Eat my ass", tts=True)
+    await ctx.send(Data.FLIRTS_LIST[random.randint(0,len(Data.FLIRTS_LIST))])
+
+@bot.command(name="flirt", help="whats a hotie like you doing here")
+async def flirt(ctx):
+    await ctx.send(Data.FLIRTS_LIST[random.randint(0,len(Data.FLIRTS_LIST))])
 
 @bot.command(name="bully_tritin", help="self explanatory actually")
 async def bully_tritin(ctx):
