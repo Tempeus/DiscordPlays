@@ -42,7 +42,12 @@ COMPLIMENT_LIST = [
     "You're a top-notch individual!",
 ]
 
-
+MEOW_LIST = [
+    "meow1.mp3",
+    "meow2.m4a",
+    "meow3.m4a",
+    "meow4.m4a"
+]
 ##################### CMD LIST #########################
 VALORANT_CMD = {
     'shoot': 'Shoots gun',
@@ -80,7 +85,9 @@ AI_CMD = {
 }
 
 SOUNDPAD_CMD = {
-    'bot_snore' : 'snoreeeee'
+    'bot_snore' : 'snoreeeee',
+    'bot_meow' : 'cat',
+    "bot_raze" : 'fire in the whole'
 }
 
 help_message = f"**Valorant Commands:**\n"

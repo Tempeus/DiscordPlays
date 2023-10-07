@@ -383,13 +383,25 @@ async def snore(ctx):
 
 @bot.command(name="bot_meow", help="soundpad")
 async def meow(ctx):
+    idx = random.randint(1,6)
     if ctx.voice_client:
-        source = discord.FFmpegPCMAudio("Sounds/meow.mp3")
+        source = discord.FFmpegPCMAudio(f"Sounds/meow{idx}.mp3")
         ctx.voice_client.play(source)
     else:
         await join(ctx)
         time.sleep(1)
-        source = discord.FFmpegPCMAudio("Sounds/meow.mp3")
+        source = discord.FFmpegPCMAudio(f"Sounds/meow{idx}.mp3")
+        ctx.voice_client.play(source)
+
+@bot.command(name="bot_raze", help="soundpad")
+async def raze(ctx):
+    if ctx.voice_client:
+        source = discord.FFmpegPCMAudio(f"Sounds/raze_ult.mp3")
+        ctx.voice_client.play(source)
+    else:
+        await join(ctx)
+        time.sleep(1)
+        source = discord.FFmpegPCMAudio(f"Sounds/raze_ult.mp3")
         ctx.voice_client.play(source)
 
 
