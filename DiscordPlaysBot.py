@@ -47,14 +47,14 @@ DISCORD_CONTROL = False
 # Functions
 def generate_TTS_mp3(msg):
     name = f"temp{time.time()}.mp3"
-    tts = gTTS(msg, tld='co.uk')
+    tts = gTTS(msg, tld='co.in')
     tts.save(name)
     return name
 
 #We dont need this shit anymore
 async def TTS(ctx, msg):
     name = generate_TTS_mp3(msg)
-    time.sleep(0.5)
+    time.sleep(0.4)
 
     if ctx.voice_client:
         source = discord.FFmpegPCMAudio(name)
@@ -404,6 +404,18 @@ async def raze(ctx):
         source = discord.FFmpegPCMAudio(f"Sounds/raze_ult.mp3")
         ctx.voice_client.play(source)
 
+@bot.command(name="bot_pipes", help="soundpad")
+async def bot_pipes(ctx):
+    if ctx.voice_client:
+        source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
+        ctx.voice_client.play(source)
+    else:
+        await join(ctx)
+        time.sleep(1)
+        source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
+        ctx.voice_client.play(source)
+
+
 
 ########################################## Tritin  ##########################################
 @bot.command(name="compliment_me", help="let me cheer you up")
@@ -467,7 +479,7 @@ async def clear(ctx, amount=5):
 ####################################### VOICE FOR SILENCED ######################################
 @bot.event
 async def on_message(message):
-    if message.channel.name == 'silenced-people' and not message.author.bot and message.author.id == JENJEN_ID:
+    if message.channel.name == 'silenced-people' and not message.author.bot and message.author.id == JENJEN_ID and "http" not in message and "<" not in message:
         ctx = await bot.get_context(message)
         await TTS(ctx, message.content)
     # Process the message as a bot command
