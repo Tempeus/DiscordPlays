@@ -47,7 +47,7 @@ DISCORD_CONTROL = False
 # Functions
 def generate_TTS_mp3(msg):
     name = f"temp{time.time()}.mp3"
-    tts = gTTS(msg, tld='co.in')
+    tts = gTTS(msg, tld='ca')
     tts.save(name)
     return name
 
@@ -404,16 +404,16 @@ async def raze(ctx):
         source = discord.FFmpegPCMAudio(f"Sounds/raze_ult.mp3")
         ctx.voice_client.play(source)
 
-@bot.command(name="bot_pipes", help="soundpad")
-async def bot_pipes(ctx):
-    if ctx.voice_client:
-        source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
-        ctx.voice_client.play(source)
-    else:
-        await join(ctx)
-        time.sleep(1)
-        source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
-        ctx.voice_client.play(source)
+# @bot.command(name="bot_pipes", help="soundpad")
+# async def bot_pipes(ctx):
+#     if ctx.voice_client:
+#         source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
+#         ctx.voice_client.play(source)
+#     else:
+#         await join(ctx)
+#         time.sleep(1)
+#         source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
+#         ctx.voice_client.play(source)
 
 
 
@@ -421,17 +421,17 @@ async def bot_pipes(ctx):
 @bot.command(name="compliment_me", help="let me cheer you up")
 async def compliment_me(ctx):
     if ctx.author.id != TRITIN_ID:
-        await ctx.send(f"{ctx.author.mention}!, "+ Data.FLIRTS_LIST[random.randint(0,len(Data.FLIRTS_LIST))])
+        await ctx.send(f"{ctx.author.mention}! "+ Data.COMPLIMENT_LIST[random.randint(0,len(Data.COMPLIMENT_LIST))])
     else:
         await ctx.send("Exception error occured")
 
 @bot.command(name="degrade_me", help="Degrade me, talk me down")
 async def degrade_me(ctx):
-    await ctx.send(Data.FLIRTS_LIST[random.randint(0,len(Data.FLIRTS_LIST))])
+    await ctx.send(f"{ctx.author.mention}! "+ Data.DEGRADE_LIST[random.randint(0,len(Data.DEGRADE_LIST))])
 
 @bot.command(name="flirt", help="whats a hotie like you doing here")
 async def flirt(ctx):
-    await ctx.send(Data.FLIRTS_LIST[random.randint(0,len(Data.FLIRTS_LIST))])
+    await ctx.send(f"{ctx.author.mention}! "+ Data.FLIRTS_LIST[random.randint(0,len(Data.FLIRTS_LIST))])
 
 @bot.command(name="bully_tritin", help="self explanatory actually")
 async def bully_tritin(ctx):
@@ -479,7 +479,7 @@ async def clear(ctx, amount=5):
 ####################################### VOICE FOR SILENCED ######################################
 @bot.event
 async def on_message(message):
-    if message.channel.name == 'silenced-people' and not message.author.bot and message.author.id == JENJEN_ID and "http" not in message and "<" not in message:
+    if message.channel.name == 'silenced-people' and not message.author.bot and message.author.id == JENJEN_ID and "http" not in message.content and "<" not in message.content and "$" not in message.content:
         ctx = await bot.get_context(message)
         await TTS(ctx, message.content)
     # Process the message as a bot command
