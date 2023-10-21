@@ -54,7 +54,7 @@ def generate_TTS_mp3(msg):
 #We dont need this shit anymore
 async def TTS(ctx, msg):
     name = generate_TTS_mp3(msg)
-    time.sleep(0.4)
+    time.sleep(0.3)
 
     if ctx.voice_client:
         source = discord.FFmpegPCMAudio(name)
@@ -404,18 +404,16 @@ async def raze(ctx):
         source = discord.FFmpegPCMAudio(f"Sounds/raze_ult.mp3")
         ctx.voice_client.play(source)
 
-# @bot.command(name="bot_pipes", help="soundpad")
-# async def bot_pipes(ctx):
-#     if ctx.voice_client:
-#         source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
-#         ctx.voice_client.play(source)
-#     else:
-#         await join(ctx)
-#         time.sleep(1)
-#         source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
-#         ctx.voice_client.play(source)
-
-
+@bot.command(name="bot_pipes", help="soundpad")
+async def bot_pipes(ctx):
+    if ctx.voice_client:
+        source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
+        ctx.voice_client.play(source)
+    else:
+        await join(ctx)
+        time.sleep(1)
+        source = discord.FFmpegPCMAudio(f"Sounds/metal_pipes.mp3")
+        ctx.voice_client.play(source)
 
 ########################################## Tritin  ##########################################
 @bot.command(name="compliment_me", help="let me cheer you up")
@@ -462,6 +460,21 @@ async def d20_dice(ctx):
         await ctx.send(f"{ctx.author.mention} rolled: 20! Critical Success!")
     else:
         await ctx.send(f"{ctx.author.mention} rolled: {random_number}")
+
+@bot.command(name="generate_team", help="help generate a valorant team")
+async def generate_team(ctx):
+    # Randomly select 5 agents without duplicates
+    selected_agents = random.sample(Data.VALORANT_AGENTS, 5)
+    answer = f"I can see you guys winning with this team comp:\n"
+    for agent in selected_agents:
+        answer += agent + "\n"
+    await ctx.send(answer)
+
+@bot.command(name="random_agent", help="pick an agent for you")
+async def random_agent(ctx):
+    selected_agents = random.sample(Data.VALORANT_AGENTS, 1)
+    answer = f"play this: {selected_agents}"
+    await ctx.send(answer)
 
 @bot.command(name="uwu")
 async def uwu(ctx,*,msg):

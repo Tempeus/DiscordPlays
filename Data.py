@@ -242,6 +242,20 @@ COMPLIMENT_LIST = [
     "You're a top-notch individual!",
 ]
 
+VALORANT_AGENTS = [
+    # Duelists
+    "Jett", "Phoenix", "Reyna", "Raze", "Yoru", "Viego",
+    
+    # Controllers
+    "Brimstone", "Omen", "Viper", "Astra",
+    
+    # Initiators
+    "Breach", "Skye", "Sova", "KAY/O",
+    
+    # Sentinels
+    "Cypher", "Killjoy", "Sage", "Chamber"
+]
+
 ##################### CMD LIST #########################
 VALORANT_CMD = {
     'shoot': 'Shoots gun',
